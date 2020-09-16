@@ -3,8 +3,6 @@ SimpleCov.start
 require 'minitest/autorun'
 require 'minitest/pride'
 require 'Pry'
-
-
 require './lib/stat_tracker'
 require './lib/team_manager'
 require './lib/game_team_manager'
