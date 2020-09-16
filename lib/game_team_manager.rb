@@ -45,7 +45,7 @@ class GameTeamManager
     @tracker.get_team_name(worst_offense.first[0])
   end
 
-  def most_accurate_team(season)
+  def sort_accuracy_by_team_id(season)
     game_ids = @tracker.get_season_game_ids(season)
     total_shots_by_team = Hash.new(0.0)
     total_goals_by_team = Hash.new(0.0)
@@ -55,23 +55,17 @@ class GameTeamManager
         total_goals_by_team[game.team_id] += game.goals.to_f
       end
     end
-    # require 'Pry';binding.pry
-    most_accurate_team = sort_percentages(total_goals_by_team, total_shots_by_team)
-    @tracker.get_team_name(most_accurate_team.last[0])
+    sort_percentages(total_goals_by_team, total_shots_by_team)
+  end
+
+  def most_accurate_team(season)
+    sort_accuracy_by_team_id(season)
+    @tracker.get_team_name(sort_accuracy_by_team_id(season).last[0])
   end
 
   def least_accurate_team(season)
-    game_ids = @tracker.get_season_game_ids(season)
-    total_shots_by_team = Hash.new(0.0)
-    total_goals_by_team = Hash.new(0.0)
-    @game_teams.each do |game|
-      if game_ids.include?(game.game_id)
-        total_shots_by_team[game.team_id] += game.shots.to_f
-        total_goals_by_team[game.team_id] += game.goals.to_f
-      end
-    end
-    least_accurate_team = sort_percentages(total_goals_by_team, total_shots_by_team)
-    @tracker.get_team_name(least_accurate_team.first[0])
+    sort_accuracy_by_team_id(season)
+    @tracker.get_team_name(sort_accuracy_by_team_id(season).first[0])
   end
 
   def most_tackles(season)
