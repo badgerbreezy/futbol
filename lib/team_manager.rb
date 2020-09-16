@@ -11,9 +11,7 @@ class TeamManager
 
   def create_underscore_teams(path)
     teams_data = CSV.read(path, headers: true)
-    @teams = teams_data.map do |data|
-      Team.new(data, self)
-    end
+    @teams = teams_data.map { |data| Team.new(data, self) }
   end
 
   def count_of_teams
