@@ -13,9 +13,7 @@ class GameManager
 
   def create_underscore_games(path)
     games_data = CSV.read(path, headers: true)
-    @games = games_data.map do |data|
-      Game.new(data, self)
-    end
+    @games = games_data.map { |data| Game.new(data, self) }
   end
 
   def highest_total_score

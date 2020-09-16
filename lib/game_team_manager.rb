@@ -14,9 +14,7 @@ class GameTeamManager
 
   def create_underscore_game_teams(path)
     game_teams_data = CSV.read(path, headers: true)
-    @game_teams = game_teams_data.map do |data|
-      GameTeam.new(data, self)
-    end
+    @game_teams = game_teams_data.map { |data| GameTeam.new(data, self)}
   end
 
   def average_win_percentage(team_id)
@@ -81,10 +79,8 @@ class GameTeamManager
         team_tackles[game.team_id] += game.tackles.to_i
       end
     end
-    most_tackles_team = team_tackles.max_by do |team, tackles|
-      tackles
-    end[0]
-    @tracker.get_team_name(most_tackles_team)
+    most_tackles_team = team_tackles.max_by { |team, tackles| tackles }
+    @tracker.get_team_name(most_tackles_team[0])
   end
 
   def fewest_tackles(season)
@@ -95,10 +91,8 @@ class GameTeamManager
         team_tackles[game.team_id] += game.tackles.to_i
       end
     end
-    most_tackles_team = team_tackles.min_by do |team, tackles|
-      tackles
-    end[0]
-    @tracker.get_team_name(most_tackles_team)
+    most_tackles_team = team_tackles.min_by { |team, tackles| tackles }
+    @tracker.get_team_name(most_tackles_team[0])
   end
 
   def find_winningest_coach(game_ids)
@@ -139,28 +133,18 @@ class GameTeamManager
   end
 
   def find_all_games(team_id)
-    @game_teams.find_all do |game|
-      game.team_id == team_id
-    end
+    @game_teams.find_all { |game| game.team_id == team_id }
   end
 
   def most_goals_scored(team_id)
-    high_goals = find_all_games(team_id).max_by do |game|
-      game.goals
-    end
-    high_goals.goals
+    find_all_games(team_id).max_by { |game| game.goals }.goals
   end
 
   def fewest_goals_scored(team_id)
-    low_goals = find_all_games(team_id).min_by do |game|
-      game.goals
-    end
-    low_goals.goals
+    find_all_games(team_id).min_by { |game| game.goals }.goals
   end
 
   def find_game_ids(team_id)
-    find_all_games(team_id).map do |game|
-      game.game_id
-    end
+    find_all_games(team_id).map { |game| game.game_id }
   end
 end
