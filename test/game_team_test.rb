@@ -24,4 +24,13 @@ class GameTeamTest < Minitest::Test
     assert_equal 8, game_team.shots
     assert_equal 44, game_team.tackles
   end
+
+  def test_stats_can_be_accessed
+    data = CSV.read('./data/game_teams_dummy.csv', headers:true)
+    game_team = GameTeam.new(data[0], "manager")
+
+    assert_equal "3", game_team.stats[:team_id]
+    assert_equal 2, game_team.stats[:goals]
+    assert_equal "John Tortorella", game_team.stats[:head_coach]
+  end
 end
