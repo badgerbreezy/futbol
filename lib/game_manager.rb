@@ -13,43 +13,31 @@ class GameManager
 
   def create_underscore_games(path)
     games_data = CSV.read(path, headers: true)
-    @games = games_data.map do |data|
-      Game.new(data, self)
-    end
+    @games = games_data.map { |data| Game.new(data, self) }
   end
 
   def highest_total_score
-    highest_score = @games.max_by do |game|
-      game.away_goals + game.home_goals
-    end
+    highest_score = @games.max_by { |game| game.away_goals + game.home_goals }
     highest_score.away_goals + highest_score.home_goals
   end
 
   def lowest_total_score
-    lowest_score = @games.min_by do |game|
-      game.away_goals + game.home_goals
-    end
+    lowest_score = @games.min_by { |game| game.away_goals + game.home_goals }
     lowest_score.away_goals + lowest_score.home_goals
   end
 
-  def percentage_home_wins # game_manager.rb
-    home_wins = @games.count do |game|
-      game.home_goals > game.away_goals
-    end
+  def percentage_home_wins
+    home_wins = @games.count { |game| game.home_goals > game.away_goals }
     (home_wins.to_f / games.length).round(2)
   end
 
   def percentage_visitor_wins
-    visitor_wins = @games.count do |game|
-      game.away_goals > game.home_goals
-    end
+    visitor_wins = @games.count { |game| game.away_goals > game.home_goals }
     (visitor_wins.to_f / games.length).round(2)
   end
 
   def percentage_ties
-    tie_games = @games.count do |game|
-      game.away_goals == game.home_goals
-    end
+    tie_games = @games.count { |game| game.away_goals == game.home_goals }
     (tie_games.to_f / games.length).round(2)
   end
 
@@ -65,63 +53,37 @@ class GameManager
   end
 
   def highest_scoring_visitor
-    team_game_count = Hash.new(0)
-    away_points = Hash.new(0)
-    @games.each do |game|
-      away_points[game.away_team_id] += game.away_goals
-      team_game_count[game.away_team_id] += 1
-    end
-    highest_scoring_visitor = sort_percentages(away_points, team_game_count)
+    away_points_and_games = game_and_stat_count(@games, :away_team_id, :away_goals)
+    highest_scoring_visitor = sort_percentages(away_points_and_games.first, away_points_and_games.last)
     @tracker.get_team_name(highest_scoring_visitor.last[0])
   end
 
   def highest_scoring_home_team
-    team_game_count = Hash.new(0)
-    home_points = Hash.new(0)
-    @games.each do |game|
-      home_points[game.home_team_id] += game.home_goals
-      team_game_count[game.home_team_id] += 1
-    end
-    highest_scoring_home_team = sort_percentages(home_points, team_game_count)
+    home_points_and_games = game_and_stat_count(@games, :home_team_id, :home_goals)
+    highest_scoring_home_team = sort_percentages(home_points_and_games.first, home_points_and_games.last)
     @tracker.get_team_name(highest_scoring_home_team.last[0])
   end
 
   def lowest_scoring_visitor
-    team_game_count = Hash.new(0)
-    away_points = Hash.new(0)
-    @games.each do |game|
-      away_points[game.away_team_id] += game.away_goals
-      team_game_count[game.away_team_id] += 1
-    end
-    lowest_scoring_visitor = sort_percentages(away_points, team_game_count)
+    away_points_and_games = game_and_stat_count(@games, :away_team_id, :away_goals)
+    lowest_scoring_visitor = sort_percentages(away_points_and_games.first, away_points_and_games.last)
     @tracker.get_team_name(lowest_scoring_visitor.first[0])
   end
 
   def get_season_game_ids(season)
-    games_in_season = @games.select do |game|
-      game.season == season
-    end
-    games_in_season.map do |game|
-      game.game_id
-    end
+    games_in_season = @games.select { |game| game.season == season }
+    games_in_season.map { |game| game.game_id }
   end
 
   def lowest_scoring_home_team
-    team_game_count = Hash.new(0)
-    home_points = Hash.new(0)
-    @games.each do |game|
-      home_points[game.home_team_id] += game.home_goals
-      team_game_count[game.home_team_id] += 1
-    end
-    lowest_scoring_home_team = sort_percentages(home_points, team_game_count)
+    home_points_and_games = game_and_stat_count(@games, :home_team_id, :home_goals)
+    lowest_scoring_home_team = sort_percentages(home_points_and_games.first, home_points_and_games.last)
     @tracker.get_team_name(lowest_scoring_home_team.first[0])
   end
 
   def wins_per_season(team_id, wins_by, games_by)
     @games.each do |game|
-      if game.home_team_id == team_id || game.away_team_id == team_id
-        games_by[game.season] << game
-      end
+      games_by[game.season] << game if game.home_team_id == team_id || game.away_team_id == team_id
     end
     games_by.each do |season, games|
       games.each do |game|
@@ -163,16 +125,13 @@ class GameManager
   end
 
   def count_of_games_by_season
-    @games.reduce(Hash.new(0)) do |collector, game|
+    @games.each_with_object(Hash.new(0)) do |game, collector|
       collector[game.season] += 1
-      collector
     end
   end
 
   def average_goals_per_game
-    average_goals = @games.sum do |game|
-      game.home_goals + game.away_goals
-    end
+    average_goals = @games.sum { |game| game.home_goals + game.away_goals }
     (average_goals.to_f / games.length).round(2)
   end
 end
