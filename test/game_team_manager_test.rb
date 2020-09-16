@@ -96,4 +96,15 @@ class GameTeamManagerTest < MiniTest::Test
     @game_team_manager.tracker.stubs(:get_team_name).returns("FC Dallas")
     assert_equal "FC Dallas", @game_team_manager.rival("3")
   end
+
+  def test_game_and_win_count
+    game_ids = @game_team_manager.find_game_ids("3")
+    expected = @game_team_manager.game_and_win_count(game_ids, :team_id, "WIN", "3")
+    expected_array = [{"6" => 3}, {"6" => 3}]
+
+    assert_equal Array, expected.class
+    assert_equal Hash, expected[0].class
+    assert_equal 2, expected.length
+    assert_equal expected_array, expected
+  end
 end
