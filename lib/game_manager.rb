@@ -26,7 +26,7 @@ class GameManager
     lowest_score.away_goals + lowest_score.home_goals
   end
 
-  def percentage_home_wins 
+  def percentage_home_wins
     home_wins = @games.count { |game| game.home_goals > game.away_goals }
     (home_wins.to_f / games.length).round(2)
   end
@@ -83,9 +83,7 @@ class GameManager
 
   def wins_per_season(team_id, wins_by, games_by)
     @games.each do |game|
-      if game.home_team_id == team_id || game.away_team_id == team_id
-        games_by[game.season] << game
-      end
+      games_by[game.season] << game if game.home_team_id == team_id || game.away_team_id == team_id
     end
     games_by.each do |season, games|
       games.each do |game|
@@ -127,9 +125,8 @@ class GameManager
   end
 
   def count_of_games_by_season
-    @games.reduce(Hash.new(0)) do |collector, game|
+    @games.each_with_object(Hash.new(0)) do |game, collector|
       collector[game.season] += 1
-      collector
     end
   end
 

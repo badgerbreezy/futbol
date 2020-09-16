@@ -9,7 +9,7 @@ class GameTeam
               :shots,
               :tackles
 
-  def initialize(data, manager)
+  def initialize(data, _manager)
     @game_id = data['game_id']
     @team_id = data['team_id']
     @result = data['result']
@@ -21,9 +21,9 @@ class GameTeam
 
   def stats
     {
-    team_id: @team_id,
-    goals: @goals,
-    head_coach: @head_coach
+      team_id: @team_id,
+      goals: @goals,
+      head_coach: @head_coach
     }
   end
 end

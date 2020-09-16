@@ -23,11 +23,11 @@ class TeamManager
       team_id == team.team_id
     end
     {
-    "team_id" => found_team.team_id,
-    "franchise_id" => found_team.franchise_id,
-    "team_name" => found_team.team_name,
-    "abbreviation" => found_team.abbreviation,
-    "link" => found_team.link
+      'team_id' => found_team.team_id,
+      'franchise_id' => found_team.franchise_id,
+      'team_name' => found_team.team_name,
+      'abbreviation' => found_team.abbreviation,
+      'link' => found_team.link
     }
   end
 
