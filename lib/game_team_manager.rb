@@ -55,6 +55,7 @@ class GameTeamManager
         total_goals_by_team[game.team_id] += game.goals.to_f
       end
     end
+    # require 'Pry';binding.pry
     most_accurate_team = sort_percentages(total_goals_by_team, total_shots_by_team)
     @tracker.get_team_name(most_accurate_team.last[0])
   end

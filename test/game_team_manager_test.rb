@@ -96,4 +96,9 @@ class GameTeamManagerTest < MiniTest::Test
     @game_team_manager.tracker.stubs(:get_team_name).returns("FC Dallas")
     assert_equal "FC Dallas", @game_team_manager.rival("3")
   end
+
+  def test_sort_by_team_accuracy
+  @game_team_manager.tracker.stubs(:get_season_game_ids).returns(["2016030171", "2016030172", "2016030173", "2016030174"])
+  assert_equal 2, @game_team_manager.sort_by_team_accuracy("20162017")
+  end
 end
