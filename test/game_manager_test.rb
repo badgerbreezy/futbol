@@ -107,7 +107,7 @@ class GameManagerTest < MiniTest::Test
 
   def test_it_can_find_worst_coach
     @game_manager.tracker.stubs(:find_winningest_coach).returns("John Tortorella")
-    assert_equal "John Tortorella", @game_manager.winningest_coach("20162017")
+    assert_equal "John Tortorella", @game_manager.worst_coach("20162017")
   end
 
 end
