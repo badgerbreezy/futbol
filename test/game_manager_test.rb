@@ -1,8 +1,9 @@
-require 'minitest/autorun'
-require 'minitest/pride'
+require './test/test_helper'
+# require 'minitest/autorun'
+# require 'minitest/pride'
 require 'mocha/minitest'
 require 'mocha/minitest'
-require 'Pry'
+# require 'Pry'
 require './lib/game'
 require './lib/game_manager'
 
@@ -86,11 +87,24 @@ class GameManagerTest < MiniTest::Test
     assert_equal "20122013", @game_manager.worst_season("24")
   end
 
-  # def test_it_can_show_how_many_wins_per_season
-  #   wins_by_season = Hash.new(0.0),
-  #   games_by_season = Hash.new { |hash, key| hash[key] = [] }
-  #   @game_manager.wins_per_season("24", wins_by_season, games_by_season).each do |game|
-  #     assert_instance_of Game, game
-  #   end
-  # end
+  def test_it_can_show_how_many_wins_per_season
+    skip
+    wins_by_season = Hash.new(0.0),
+    games_by_season = Hash.new { |hash, key| hash[key] = [] }
+    @game_manager.wins_per_season("24", wins_by_season, games_by_season)
+    # games_by_season.each do |season, games|
+    #   games.each_do do |game|
+    #     assert_instance_of Game, game
+    #   end
+    # end
+    assert_equal ({"20132014"=>1.0, "20122013"=>1.0, "20162017"=>4.0}), wins_by_season
+  end
+
+  def test_it_can_find_winningest_coach
+    @game_manager.tracker.stub(:find_winningest_coach).returns("John Tortorella")
+    assert_equal "John Tortorella", @game_manager.winningest_coach("20162017")
+  end
+
+  end
+
 end
